@@ -16,39 +16,19 @@ export default function Hero() {
   };
 
   const images = [
+    { src: "/souci_office.jpeg", alt: "Professional team at PT. Souci Indoprima" },
     { src: "/building.png", alt: "Building 1" },
     { src: "/s1.jpg", alt: "Building 2" },
     { src: "/s2.jpg", alt: "Office" },
   ];
 
-  const scrollToImage = (index) => {
-    const scrollContainer = scrollContainerRef.current;
-    if (scrollContainer) {
-      const firstImage = scrollContainer.querySelector(".image-wrapper");
-      if (firstImage) {
-        const imageWidth = firstImage.offsetWidth;
-        const gap = 24; // gap-6 = 24px
-        const scrollPosition = (imageWidth + gap) * index;
-
-        scrollContainer.scrollTo({
-          left: scrollPosition,
-          behavior: "smooth",
-        });
-        setCurrentIndex(index);
-      }
-    }
-  };
-
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer || isPaused) return;
+    if (isPaused) return;
 
     // Auto scroll ke gambar berikutnya setiap 3 detik
     const autoScrollInterval = setInterval(() => {
       setCurrentIndex((prevIndex) => {
-        const nextIndex = (prevIndex + 1) % images.length;
-        scrollToImage(nextIndex);
-        return nextIndex;
+        return (prevIndex + 1) % images.length;
       });
     }, 3000);
 
@@ -56,26 +36,6 @@ export default function Hero() {
       clearInterval(autoScrollInterval);
     };
   }, [isPaused, images.length]);
-
-  // Handle manual scroll untuk update indicator
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
-    const handleScroll = () => {
-      const firstImage = scrollContainer.querySelector(".image-wrapper");
-      if (firstImage) {
-        const imageWidth = firstImage.offsetWidth;
-        const gap = 24;
-        const scrollLeft = scrollContainer.scrollLeft;
-        const index = Math.round(scrollLeft / (imageWidth + gap));
-        setCurrentIndex(index);
-      }
-    };
-
-    scrollContainer.addEventListener("scroll", handleScroll);
-    return () => scrollContainer.removeEventListener("scroll", handleScroll);
-  }, []);
 
   return (
     <section id="home" className="relative min-h-screen flex items-center pt-20 overflow-hidden">
@@ -130,7 +90,19 @@ export default function Hero() {
           <div className="relative animate-fade-in-delay">
             <div className="relative w-full aspect-4/3 lg:aspect-square">
               <div className="absolute inset-0 bg-linear-to-br from-blue-400 to-blue-600 rounded-[40px] opacity-10 transform rotate-6"></div>
-              <Image src="/souci_office.jpeg" alt="Professional team at PT. Souci Indoprima" fill className="object-cover rounded-[40px] shadow-2xl" priority sizes="(max-width: 768px) 100vw, 50vw" />
+              {images.map((image, index) => (
+                <Image
+                  key={index}
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  className={`object-cover rounded-[40px] shadow-2xl transition-opacity duration-1000 ${
+                    index === currentIndex ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  priority={index === 0}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              ))}
             </div>
           </div>
         </div>
