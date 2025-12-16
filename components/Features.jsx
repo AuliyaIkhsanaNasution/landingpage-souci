@@ -164,26 +164,26 @@ export default function Features() {
         </div>
 
         {/* Optional CTA below features */}
-        <ScrollReveal direction="up" delay={0.4}>
-          <div className="text-center mt-16">
-            <motion.button
-              onClick={() =>
-                document
-                  .getElementById("contact")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="px-8 py-3 rounded-lg bg-linear-to-r from-blue-500 to-blue-700 text-white font-semibold shadow-lg"
-              whileHover={{
-                scale: 1.05,
-                boxShadow:
-                  "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
-              }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Hubungi Kami Sekarang
-            </motion.button>
-          </div>
-        </ScrollReveal>
+<ScrollReveal direction="up" delay={0.4}>
+  <div className="text-center mt-16">
+    <motion.button
+      onClick={() =>
+        document
+          .getElementById("contact-form")  // Ubah dari "contact" menjadi "contact-form"
+          ?.scrollIntoView({ behavior: "smooth" })
+      }
+      className="px-8 py-3 rounded-lg bg-linear-to-r from-blue-500 to-blue-700 text-white font-semibold shadow-lg"
+      whileHover={{
+        scale: 1.05,
+        boxShadow:
+          "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+      }}
+      whileTap={{ scale: 0.95 }}
+    >
+      Hubungi Kami Sekarang
+    </motion.button>
+  </div>
+</ScrollReveal>
       </div>
     </section>
   );

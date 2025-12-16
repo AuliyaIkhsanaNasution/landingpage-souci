@@ -106,19 +106,25 @@ export default function Hero() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <button
-                onClick={scrollToAbout}
-                className="px-8 py-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold hover:from-blue-600 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
-              >
-                Learn More
-              </button>
-              <button
-                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-                className="px-8 py-3 rounded-lg bg-white text-blue-600 font-semibold border-2 border-blue-600 hover:bg-blue-50 transition-all shadow-md hover:shadow-lg"
-              >
-                Contact Us
-              </button>
-            </div>
+    onClick={scrollToAbout}
+    className="px-8 py-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold hover:from-blue-600 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+  >
+    Learn More
+  </button>
+  <button
+      onClick={() => {
+        const contactForm = document.getElementById("contact-form");
+        if (contactForm) {
+        contactForm.scrollIntoView({ behavior: "smooth" });
+           }
+        }}
+         className="px-8 py-3 rounded-lg bg-white text-blue-600 font-semibold border-2 border-blue-600 hover:bg-blue-50 transition-all shadow-md hover:shadow-lg"
+          >
+          Contact Us
+        </button>
+        </div>
           </div>
+
 
           {/* Right Side - Hero Image Carousel */}
           <div className="relative animate-fade-in-delay">
