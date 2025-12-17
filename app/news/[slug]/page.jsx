@@ -157,7 +157,7 @@ export default function NewsDetailPage() {
           </ScrollReveal>
 
           {/* Tags */}
-          <ScrollReveal direction="up" delay={0.2}>
+          {/* <ScrollReveal direction="up" delay={0.2}>
             <div className="mt-12 pt-8 border-t border-gray-200">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Tags:</h3>
               <div className="flex flex-wrap gap-2">
@@ -170,7 +170,7 @@ export default function NewsDetailPage() {
                   ))}
               </div>
             </div>
-          </ScrollReveal>
+          </ScrollReveal> */}
 
           {/* Share Buttons */}
           <ScrollReveal direction="up" delay={0.3}>
