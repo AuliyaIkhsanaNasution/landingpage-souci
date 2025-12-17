@@ -82,27 +82,27 @@ export default function ServicePageClient() {
   const servicesRef = useRef(null);
 
   useEffect(() => {
-  // Hero animation on mount
-  setIsVisible(prev => ({ ...prev, hero: true }));
+    // Hero animation on mount
+    setIsVisible((prev) => ({ ...prev, hero: true }));
 
-  // Intersection Observer untuk section lainnya
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          if (entry.target === servicesRef.current) {
-            setIsVisible(prev => ({ ...prev, services: true }));
+    // Intersection Observer untuk section lainnya
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (entry.target === servicesRef.current) {
+              setIsVisible((prev) => ({ ...prev, services: true }));
+            }
           }
-        }
-      });
-    },
-    { threshold: 0.2, rootMargin: '-50px' }  // ← UBAH THRESHOLD & TAMBAH ROOTMARGIN
-  );
+        });
+      },
+      { threshold: 0.2, rootMargin: "-50px" } // ← UBAH THRESHOLD & TAMBAH ROOTMARGIN
+    );
 
-  if (servicesRef.current) observer.observe(servicesRef.current);
+    if (servicesRef.current) observer.observe(servicesRef.current);
 
-  return () => observer.disconnect();
-}, []);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
@@ -114,13 +114,7 @@ export default function ServicePageClient() {
           <div className="absolute inset-0 bg-blue-900/70 z-10"></div>
           <div className="absolute inset-0 bg-[url('/services.png')] bg-cover bg-center"></div>
         </div>
-        <div 
-          className={`relative z-20 text-center text-white px-4 transition-all duration-1000 ${
-            isVisible.hero 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-10'
-          }`}
-        >
+        <div className={`relative z-20 text-center text-white px-4 transition-all duration-1000 ${isVisible.hero ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">Product & Services</h1>
           <p className="text-xl md:text-2xl font-medium">Outsourcing SDM Terintegrasi: Jaminan Kualitas dan Kehandalan.</p>
         </div>
@@ -129,48 +123,39 @@ export default function ServicePageClient() {
       {/* Layanan Kami Section */}
       <section ref={servicesRef} className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 
-            className={`text-4xl lg:text-5xl font-bold text-center text-blue-600 mb-6 transition-all duration-700 ${
-              isVisible.services 
-                ? 'opacity-100 translate-y-0' 
-                : 'opacity-0 -translate-y-10'
-            }`}
-          >
-            Layanan Kami
-          </h2>
+          <h2 className={`text-4xl lg:text-5xl font-bold text-center text-blue-600 mb-6 transition-all duration-700 ${isVisible.services ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}>Layanan Kami</h2>
 
-          <p 
-            className={`text-center text-gray-600 text-lg max-w-4xl mx-auto mb-16 transition-all duration-700 delay-100 ${
-              isVisible.services 
-                ? 'opacity-100 translate-y-0' 
-                : 'opacity-0 translate-y-10'
-            }`}
-          >
+          <p className={`text-center text-gray-600 text-lg max-w-4xl mx-auto mb-16 transition-all duration-700 delay-100 ${isVisible.services ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <strong>PT. Souci Indoprima</strong> adalah corporate outsourcing yang berfokus pada layanan <strong>Human Resources Integrated</strong>.
             <br />
             Kami mengutamakan keandalan SDM dan kepuasan pelanggan sebagai dasar kekuatan organisasi.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-  {services.map((service, index) => (
-    <div 
-      key={service.id} 
-      className={`bg-white border-2 border-blue-200 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-1000 ${
-        isVisible.services 
-          ? 'opacity-100 translate-x-0'
-          : `opacity-0 ${index % 2 === 0 ? '-translate-x-full' : 'translate-x-full'}`
-      }`}
-      style={{ transitionDelay: `${(index + 2) * 100}ms` }}
-    >
-                <div className="flex flex-col items-center text-center">
-                  <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-6">{service.icon}</div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-4">{service.title}</h3>
-                  <button onClick={() => setSelectedService(service)} className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
-                    Selengkapnya...
-                  </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 overflow-hidden p-4">
+            {services.map((service, index) => {
+              // Tentukan arah: index 0 & 2 dari kiri (-translate-x), index 1 & 3 dari kanan (translate-x)
+              const isLeft = index % 2 === 0;
+
+              return (
+                <div
+                  key={service.id}
+                  className={`bg-white border-2 border-blue-200 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-1000 ease-out ${
+                    isVisible.services
+                      ? "opacity-100 translate-x-0 translate-y-0" // Posisi akhir (tengah)
+                      : `opacity-0 ${isLeft ? "-translate-x-20" : "translate-x-20"} translate-y-10` // Posisi awal (samping & bawah)
+                  }`}
+                  style={{ transitionDelay: `${(index + 1) * 150}ms` }}
+                >
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-6">{service.icon}</div>
+                    <h3 className="text-2xl font-bold text-gray-800 mb-4">{service.title}</h3>
+                    <button onClick={() => setSelectedService(service)} className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
+                      Selengkapnya...
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
