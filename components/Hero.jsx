@@ -15,9 +15,9 @@ export default function Hero() {
   };
 
   const images = [
-    { src: "/carausel1.png", alt: "Professional team at PT. Souci Indoprima" },
-    { src: "/building.png", alt: "Building 1" },
-    { src: "/s1.jpg", alt: "Building 2" },
+    { src: "/b3.jpg", alt: "Professional team at PT. Souci Indoprima" },
+    { src: "/b1.png", alt: "Building 1" },
+    { src: "/b2.jpg", alt: "Building 2" },
   ];
 
   useEffect(() => {
