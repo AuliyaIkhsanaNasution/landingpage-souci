@@ -84,6 +84,11 @@ export default function ServicePageClient() {
   useEffect(() => {
     // Hero animation on mount
     setIsVisible((prev) => ({ ...prev, hero: true }));
+    
+    // Services muncul setelah hero dengan delay
+    setTimeout(() => {
+      setIsVisible((prev) => ({ ...prev, services: true }));
+    }, 500);
 
     // Intersection Observer untuk section lainnya
     const observer = new IntersectionObserver(
@@ -96,7 +101,7 @@ export default function ServicePageClient() {
           }
         });
       },
-      { threshold: 0.2, rootMargin: "-50px" } // ← UBAH THRESHOLD & TAMBAH ROOTMARGIN
+      { threshold: 0.05, rootMargin: "100px" }
     );
 
     if (servicesRef.current) observer.observe(servicesRef.current);
@@ -139,7 +144,7 @@ export default function ServicePageClient() {
               return (
                 <div
                   key={service.id}
-                  className={`bg-white border-2 border-blue-200 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-1000 ease-out ${
+                  className={`bg-white border-2 border-blue-200 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-2500 ease-out ${
                     isVisible.services
                       ? "opacity-100 translate-x-0 translate-y-0" // Posisi akhir (tengah)
                       : `opacity-0 ${isLeft ? "-translate-x-20" : "translate-x-20"} translate-y-10` // Posisi awal (samping & bawah)
