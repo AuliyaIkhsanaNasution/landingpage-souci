@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ContactForm from "@/components/ContactForm";
@@ -38,7 +38,6 @@ export default function ServicePageClient() {
           text: "Front Liner, Guarding dan beberapa fungsi administrasi dan marketing merupakan ruang lingkup pekerjaan yang memiliki turn over yang cukup tinggi. Cukup banyak waktu dan personil yang dicurahkan untuk mengawasinya, sehingga perhatian untuk tugas-tugas pokok sering tertinggal. Biarkan kami yang menanganinya.",
         },
       ],
-
       icon: (
         <svg className="w-12 h-12 text-blue-600" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
           <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
@@ -53,7 +52,6 @@ export default function ServicePageClient() {
         "Organisasi menjadi lebih fleksibel, lincah dan dinamis sesuai dengan tuntutan pasar yang selalu berubah dari waktu ke waktu, disamping akan mampu meningkatkan value atas penggunaan sumber daya yang dimiliki untuk mencapai tujuan perusahaan.",
         "B.P.O masih relatif baru dan belum menjadi kebiasaan di lingkungan bisnis di tanah air, namun model ini merupakan salah satu alat manajemen yang dapat mendorong perusahaan agar dapat bersaing nasional maupun dunia. Sebaiknya gunakan jasa kami untuk memperoleh hasil yang maksimal dari Business Process Outsourcing.",
       ],
-
       icon: (
         <svg className="w-12 h-12 text-blue-600" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
           <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -76,6 +74,35 @@ export default function ServicePageClient() {
   ];
 
   const [selectedService, setSelectedService] = useState(null);
+  const [isVisible, setIsVisible] = useState({
+    hero: false,
+    services: false,
+  });
+
+  const servicesRef = useRef(null);
+
+  useEffect(() => {
+  // Hero animation on mount
+  setIsVisible(prev => ({ ...prev, hero: true }));
+
+  // Intersection Observer untuk section lainnya
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if (entry.target === servicesRef.current) {
+            setIsVisible(prev => ({ ...prev, services: true }));
+          }
+        }
+      });
+    },
+    { threshold: 0.2, rootMargin: '-50px' }  // ← UBAH THRESHOLD & TAMBAH ROOTMARGIN
+  );
+
+  if (servicesRef.current) observer.observe(servicesRef.current);
+
+  return () => observer.disconnect();
+}, []);
 
   return (
     <>
@@ -87,26 +114,54 @@ export default function ServicePageClient() {
           <div className="absolute inset-0 bg-blue-900/70 z-10"></div>
           <div className="absolute inset-0 bg-[url('/services.png')] bg-cover bg-center"></div>
         </div>
-        <div className="relative z-20 text-center text-white px-4">
+        <div 
+          className={`relative z-20 text-center text-white px-4 transition-all duration-1000 ${
+            isVisible.hero 
+              ? 'opacity-100 translate-y-0' 
+              : 'opacity-0 translate-y-10'
+          }`}
+        >
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">Product & Services</h1>
           <p className="text-xl md:text-2xl font-medium">Outsourcing SDM Terintegrasi: Jaminan Kualitas dan Kehandalan.</p>
         </div>
       </section>
 
       {/* Layanan Kami Section */}
-      <section className="py-20 bg-white">
+      <section ref={servicesRef} className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl lg:text-5xl font-bold text-center text-blue-600 mb-6">Layanan Kami</h2>
+          <h2 
+            className={`text-4xl lg:text-5xl font-bold text-center text-blue-600 mb-6 transition-all duration-700 ${
+              isVisible.services 
+                ? 'opacity-100 translate-y-0' 
+                : 'opacity-0 -translate-y-10'
+            }`}
+          >
+            Layanan Kami
+          </h2>
 
-          <p className="text-center text-gray-600 text-lg max-w-4xl mx-auto mb-16">
+          <p 
+            className={`text-center text-gray-600 text-lg max-w-4xl mx-auto mb-16 transition-all duration-700 delay-100 ${
+              isVisible.services 
+                ? 'opacity-100 translate-y-0' 
+                : 'opacity-0 translate-y-10'
+            }`}
+          >
             <strong>PT. Souci Indoprima</strong> adalah corporate outsourcing yang berfokus pada layanan <strong>Human Resources Integrated</strong>.
             <br />
             Kami mengutamakan keandalan SDM dan kepuasan pelanggan sebagai dasar kekuatan organisasi.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {services.map((service) => (
-              <div key={service.id} className="bg-white border-2 border-blue-200 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+  {services.map((service, index) => (
+    <div 
+      key={service.id} 
+      className={`bg-white border-2 border-blue-200 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-1000 ${
+        isVisible.services 
+          ? 'opacity-100 translate-x-0'
+          : `opacity-0 ${index % 2 === 0 ? '-translate-x-full' : 'translate-x-full'}`
+      }`}
+      style={{ transitionDelay: `${(index + 2) * 100}ms` }}
+    >
                 <div className="flex flex-col items-center text-center">
                   <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-6">{service.icon}</div>
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">{service.title}</h3>
