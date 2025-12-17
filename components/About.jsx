@@ -31,7 +31,7 @@ export default function About() {
               </p>
 
               <p className="text-lg">
-                Dengan pengalaman lebih dari <strong>15 tahun</strong>, kami telah membantu ratusan perusahaan dalam mengelola SDM mereka secara efisien dan profesional.
+                Dengan pengalaman lebih dari <strong>20 tahun</strong>, kami telah membantu ratusan perusahaan dalam mengelola SDM mereka secara efisien dan profesional.
               </p>
 
               <p className="text-lg">Kami berkomitmen untuk memberikan solusi HR terbaik yang disesuaikan dengan kebutuhan setiap klien, mulai dari penyediaan tenaga kerja, rekrutmen, hingga konsultasi strategi pengembangan SDM.</p>

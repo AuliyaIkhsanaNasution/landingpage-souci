@@ -49,7 +49,7 @@ export default function Hero() {
             </h1>
 
             <p className="text-lg text-gray-600 max-w-xl mx-auto lg:mx-0">
-              PT. Souci Indoprima adalah provider outsourcing terpercaya dengan pengalaman lebih dari 15 tahun dalam mengelola sumber daya manusia di sektor jasa dengan coverage Sumatera Area.
+              PT. Souci Indoprima adalah provider outsourcing terpercaya dengan pengalaman lebih dari 20 tahun dalam mengelola sumber daya manusia di sektor jasa dengan coverage Sumatera Area.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
