@@ -65,10 +65,10 @@ export default function AboutPage() {
       {/* Visi & Misi Section */}
       <section ref={visiMisiRef} className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 gap-8">
             {/* Visi Card */}
             <div className={`bg-blue-100 rounded-2xl p-8 shadow-lg transition-all duration-700 delay-100 ${isVisible.visiMisi ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"}`}>
-              <div className="flex items-start space-x-4 mb-6">
+              <div className="flex items-center justify-center space-x-4 mb-6">
                 <div className="shrink-0 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md">
                   <svg className="w-8 h-8 text-blue-600" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                     <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -76,12 +76,15 @@ export default function AboutPage() {
                 </div>
                 <h2 className="text-3xl font-bold text-gray-800">Visi</h2>
               </div>
-              <p className="text-gray-700 leading-relaxed text-lg">Menjadi yang terbaik</p>
+              <p className="text-gray-700 leading-relaxed text-center text-lg">
+                Menjadi Corporate Outsourcing Terbaik di Indonesia Dengan Berlandaskan Nilai-Nilai Luhur Kemanusiaan Yang Menjunjung Tinggi Profesionalisme, Transparansi dan Akuntabilitas Dalam Setiap Proses Bisnis dan Membudaya Bagi Setiap
+                Individu Sebagai Upaya Menegaskan Fungsi dan Peran Organisasi Sebagai Elemen Perubah Demi Kesuksesan dan Kemakmuran Bersama.
+              </p>
             </div>
 
             {/* Misi Card */}
             <div className={`bg-blue-100 rounded-2xl p-8 shadow-lg transition-all duration-700 delay-300 ${isVisible.visiMisi ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}>
-              <div className="flex items-start space-x-4 mb-6">
+              <div className="flex items-center justify-center space-x-4 mb-6">
                 <div className="shrink-0 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md">
                   <svg className="w-8 h-8 text-blue-600" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                     <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
@@ -89,10 +92,19 @@ export default function AboutPage() {
                 </div>
                 <h2 className="text-3xl font-bold text-gray-800">Misi</h2>
               </div>
-              <ol className="text-gray-700 leading-relaxed text-lg space-y-2 list-decimal list-inside">
-                <li>- asdasdfas</li>
-                <li>- sdmiasmdf </li>
-                <li>Sed ut perspiciatis unde omnis iste</li>
+              <ol className="text-gray-700 leading-relaxed text-lg space-y-2 list-decimal list-inside text-justify">
+                <li>
+                  Menciptakan Branding Perusahaan Sebagai Corporate Outsourcing Yang Fokus Pada Pengembangan Sumber Daya Manusia Agar Memiliki Kualitas dan Kapasitas Yang Sesuai Dengan Kebutuhan dan Kenginan Pasar Dengan Standarisasi Yang
+                  Jelas, dan Terukur.
+                </li>
+                <li>
+                  Mengembangkan Iklim Usaha Yang Kondusif Bagi Seluruh Pekerja Untuk Mengaktualisasikan Diri dan Senantiasa Mematuhi Seluruh Perangkat Hukum Yang Mengatur Hubungan Antara Pekerja dan Perusahaan Dalam Bingkai Saling Memahami,
+                  Menghormati dan Melaksanakan Hak dan Kewajiban Masing-Masing.
+                </li>
+                <li>
+                  Menerapkan Prinsip-Prinsip Kejujuran dan Keterbukaan Yang Bertanggungjawab Diantara Pekerja, Perusahaan dan Pengguna Jasa Agar Tercipta Harmonisasi Hubungan Yang Mendorong Munculnya Sinergi Positif Dalam Rangka Mencapai
+                  Hubungan Industrial Yang Berketuhanan.
+                </li>
               </ol>
             </div>
           </div>
