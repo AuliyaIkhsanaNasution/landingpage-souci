@@ -123,6 +123,22 @@ export default function JobDetailPage() {
     </svg>
     <span>{job?.salary_range || job?.salary}</span>
   </div>
+  <div className="flex items-center">
+    <svg
+      className="w-5 h-5 mr-2"
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
+    <span>{job?.kuota || job?.kuota}</span>
+  </div>
+  
 </div>
         </div>
       </section>

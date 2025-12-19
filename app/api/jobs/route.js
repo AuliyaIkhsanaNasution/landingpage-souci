@@ -57,6 +57,7 @@ export async function POST(req) {
       location,
       type = "full_time",
       salary_range,
+      kuota,
       education,
       experience,
       category,
@@ -113,9 +114,9 @@ export async function POST(req) {
 
     // Insert job
     const [result] = await db.query(
-      `INSERT INTO jobs (title, slug, company, location, type, salary_range, education, experience, category, description, 
+      `INSERT INTO jobs (title, slug, company, location, type, salary_range, kuota, education, experience, category, description, 
        responsibilities, requirements, benefits, status, deadline) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         title,
         slug,
@@ -123,6 +124,7 @@ export async function POST(req) {
         location,
         type,
         salary_range || null,
+        kuota || null,
         education || null,
         experience || null,
         category || null,

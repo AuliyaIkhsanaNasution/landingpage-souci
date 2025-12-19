@@ -59,6 +59,7 @@ export async function PUT(req, { params }) {
       location,
       type,
       salary_range,
+      kuota,
       education,
       experience,
       category,
@@ -144,6 +145,10 @@ export async function PUT(req, { params }) {
     if (salary_range !== undefined) {
       updates.push("salary_range = ?");
       values.push(salary_range || null);
+    }
+    if (kuota !== undefined) {
+      updates.push("kuota = ?");
+      values.push(kuota || null);
     }
     if (education !== undefined) {
       updates.push("education = ?");
