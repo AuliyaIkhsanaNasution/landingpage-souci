@@ -8,14 +8,19 @@ import { db } from "@/lib/database";
  * Helper function to validate and save file
  */
 async function saveFile(file, folder, allowedTypes, maxSize = 5 * 1024 * 1024) {
+  // Validate file exists
+  if (!file || file.size === 0) {
+    throw new Error(`No file provided for ${folder}`);
+  }
+
   // Validate file type
   if (!allowedTypes.includes(file.type)) {
-    throw new Error(`Invalid file type for ${folder}`);
+    throw new Error(`Invalid file type for ${folder}. Allowed: ${allowedTypes.join(", ")}`);
   }
 
   // Validate file size
   if (file.size > maxSize) {
-    throw new Error(`File size for ${folder} must not exceed 5MB`);
+    throw new Error(`File size for ${folder} exceeds 5MB limit`);
   }
 
   // Create upload directory if not exists
@@ -63,17 +68,28 @@ export async function POST(req) {
     const skckFile = formData.get("skck");
 
     // Validate required fields
-    if (!job_id || !name || !email || !phone || !whatsapp || !cvFile || !ktpFile || !kartuKeluargaFile || !ijazahFile || !skckFile) {
+    if (!job_id || !name || !email || !phone || !whatsapp) {
       return NextResponse.json(
         {
           success: false,
-          message: "Please provide all required fields including CV, KTP, Kartu Keluarga, Ijazah, and SKCK",
+          message: "Please provide all required fields",
         },
         { status: 400 }
       );
     }
 
-    // Check if job exists
+    // Validate required files
+    if (!cvFile || !ktpFile || !kartuKeluargaFile || !ijazahFile || !skckFile) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Please upload all required documents: CV, KTP, Kartu Keluarga, Ijazah, and SKCK",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Check if job exists and is open
     const [job] = await db.query(
       'SELECT id FROM jobs WHERE id = ? AND status = "open"',
       [job_id]
@@ -83,45 +99,80 @@ export async function POST(req) {
       return NextResponse.json(
         {
           success: false,
-          message: "Job posting not found or closed",
+          message: "Job posting not found or already closed",
         },
         { status: 404 }
       );
     }
 
-    // Define allowed types for each document
+    // Define allowed file types
     const documentTypes = [
       "application/pdf",
       "application/msword",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
-    const imageTypes = ["image/png", "image/jpeg", "image/jpg"];
+    
+    const imageAndPdfTypes = [
+      "image/png", 
+      "image/jpeg", 
+      "image/jpg", 
+      "application/pdf"
+    ];
 
-    // Save CV
-    const cvPath = await saveFile(cvFile, "cv", documentTypes);
+    const pdfOnly = ["application/pdf"];
 
-    // Save KTP
-    const ktpPath = await saveFile(ktpFile, "ktp", imageTypes);
+    // Save all required documents
+    let cvPath, ktpPath, kartuKeluargaPath, ijazahPath, skckPath;
 
-    // Save Kartu Keluarga
-    const kartuKeluargaPath = await saveFile(kartuKeluargaFile, "kartu_keluarga", imageTypes);
+    try {
+      // Save CV (PDF or DOC)
+      cvPath = await saveFile(cvFile, "cv", documentTypes);
 
-    // Save Ijazah
-    const ijazahPath = await saveFile(ijazahFile, "ijazah", imageTypes);
+      // Save KTP (PNG, JPG, PDF)
+      ktpPath = await saveFile(ktpFile, "ktp", imageAndPdfTypes);
 
-    // Save SKCK
-    const skckPath = await saveFile(skckFile, "skck", imageTypes);
+      // Save Kartu Keluarga (PNG, JPG, PDF)
+      kartuKeluargaPath = await saveFile(kartuKeluargaFile, "kartu_keluarga", imageAndPdfTypes);
 
-    // Handle multiple sertifikat files (optional)
+      // Save Ijazah (PNG, JPG, PDF)
+      ijazahPath = await saveFile(ijazahFile, "ijazah", imageAndPdfTypes);
+
+      // Save SKCK (PNG, JPG, PDF)
+      skckPath = await saveFile(skckFile, "skck", imageAndPdfTypes);
+
+    } catch (fileError) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: fileError.message || "Error uploading files",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Handle multiple sertifikat files (optional, PDF only)
     let sertifikatPaths = [];
-    let index = 0;
-    while (formData.has(`sertifikat[${index}]`)) {
-      const sertifikatFile = formData.get(`sertifikat[${index}]`);
-      if (sertifikatFile && sertifikatFile.size > 0) {
-        const sertifikatPath = await saveFile(sertifikatFile, "sertifikat", imageTypes);
-        sertifikatPaths.push(sertifikatPath);
+    
+    // Get all files with key "sertifikat[]"
+    const sertifikatFiles = formData.getAll("sertifikat[]");
+    
+    if (sertifikatFiles && sertifikatFiles.length > 0) {
+      for (const sertifikatFile of sertifikatFiles) {
+        // Check if it's a valid file (not empty)
+        if (sertifikatFile && sertifikatFile.size > 0) {
+          try {
+            const sertifikatPath = await saveFile(
+              sertifikatFile, 
+              "sertifikat", 
+              pdfOnly // Only PDF allowed for certificates
+            );
+            sertifikatPaths.push(sertifikatPath);
+          } catch (certError) {
+            // If one certificate fails, continue with others
+            console.error("Error uploading certificate:", certError);
+          }
+        }
       }
-      index++;
     }
 
     // Convert sertifikat paths to JSON string
@@ -154,6 +205,7 @@ export async function POST(req) {
         message: "Application submitted successfully",
         data: {
           application_id: result.insertId,
+          certificates_uploaded: sertifikatPaths.length
         },
       },
       { status: 201 }
@@ -163,7 +215,7 @@ export async function POST(req) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message || "Error submitting application",
+        message: error.message || "Error submitting application. Please try again.",
       },
       { status: 500 }
     );
