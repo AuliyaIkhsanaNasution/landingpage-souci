@@ -167,6 +167,7 @@ export default function CareerPage() {
                       </p>
                     </div>
                   </div>
+                  
 
                   {/* Location & Type */}
                   <div className="flex flex-wrap items-center gap-4 text-gray-600 mb-4">
