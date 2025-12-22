@@ -39,6 +39,7 @@ export default function CareerPage() {
             description:
               "Dibutuhkan staff administrasi yang teliti, mampu bekerja dengan tim, dan memiliki pengalaman minimal 1 tahun di bidang administrasi.",
             slug: "staff-administrasi",
+            applicants_count: 0,
           },
           {
             id: 2,
@@ -50,6 +51,7 @@ export default function CareerPage() {
             description:
               "Kami mencari web developer yang memiliki pengalaman dengan teknologi web modern. Menguasai HTML, CSS, JavaScript, dan framework seperti React/Vue.",
             slug: "web-developer",
+            applicants_count: 0,
           },
         ]);
       } finally {
@@ -211,7 +213,27 @@ export default function CareerPage() {
                       </svg>
                       <span>{job.salary_range}</span>
                     </div>
-                    <div className="flex items-center">
+                    
+                    {/* Kuota */}
+                    {job.kuota && (
+                      <div className="flex items-center">
+                        <svg
+                          className="w-5 h-5 mr-2"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span>Kuota: {job.kuota}</span>
+                      </div>
+                    )}
+                       
+                    {/* Applicants Count - ADDED */}
+                    <div className="flex items-center font-medium text-blue-600">
                       <svg
                         className="w-5 h-5 mr-2"
                         fill="none"
@@ -221,10 +243,9 @@ export default function CareerPage() {
                         viewBox="0 0 24 24"
                         stroke="currentColor"
                       >
-                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
+                        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                       </svg>
-                      <span>{formatJobType(job.kuota)}</span>
+                      <span>{job.applicants_count || 0} Pelamar</span>
                     </div>
                   </div>
 
@@ -260,7 +281,7 @@ export default function CareerPage() {
                     {/* Apply Button */}
                     <Link
                       href={`/carrier/${job.slug}`}
-                      className="px-6 py-2.5 bg-linear-to-r from-blue-500 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all shadow-md hover:shadow-lg inline-flex items-center"
+                      className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all shadow-md hover:shadow-lg inline-flex items-center"
                     >
                       Lihat Detail
                       <svg

@@ -3,7 +3,7 @@ import { db } from "@/lib/database";
 
 /**
  * GET /api/jobs/[slug]
- * Get single job posting by slug or id
+ * Get single job posting by slug or id with applicants count
  */
 export async function GET(req, { params }) {
   try {
@@ -11,9 +11,23 @@ export async function GET(req, { params }) {
 
     // Check if slug is numeric (id) or string (slug)
     const isId = !isNaN(slug);
+    
+    // Modified query to include applicants count
     const query = isId
-      ? "SELECT * FROM jobs WHERE id = ?"
-      : "SELECT * FROM jobs WHERE slug = ?";
+      ? `SELECT 
+          j.*,
+          COUNT(ja.id) as applicants_count
+         FROM jobs j
+         LEFT JOIN job_applications ja ON j.id = ja.job_id
+         WHERE j.id = ?
+         GROUP BY j.id`
+      : `SELECT 
+          j.*,
+          COUNT(ja.id) as applicants_count
+         FROM jobs j
+         LEFT JOIN job_applications ja ON j.id = ja.job_id
+         WHERE j.slug = ?
+         GROUP BY j.id`;
 
     const [jobs] = await db.query(query, [slug]);
 
@@ -27,9 +41,15 @@ export async function GET(req, { params }) {
       );
     }
 
+    // Convert applicants_count from string to number
+    const job = {
+      ...jobs[0],
+      applicants_count: parseInt(jobs[0].applicants_count) || 0
+    };
+
     return NextResponse.json({
       success: true,
-      data: jobs[0],
+      data: job,
     });
   } catch (error) {
     console.error("Error fetching job:", error);

@@ -3,7 +3,7 @@ import { db } from "@/lib/database";
 
 /**
  * GET /api/jobs
- * Get all open job postings
+ * Get all open job postings with applicants count
  */
 export async function GET(req) {
   try {
@@ -12,23 +12,37 @@ export async function GET(req) {
     const limit = parseInt(searchParams.get("limit")) || 10;
     const offset = parseInt(searchParams.get("offset")) || 0;
 
-    let query = "SELECT * FROM jobs";
+    // Modified query to include applicants count
+    let query = `
+      SELECT 
+        j.*,
+        COUNT(ja.id) as applicants_count
+      FROM jobs j
+      LEFT JOIN job_applications ja ON j.id = ja.job_id
+    `;
+    
     const queryParams = [];
 
     if (status !== "all") {
-      query += " WHERE status = ?";
+      query += " WHERE j.status = ?";
       queryParams.push(status);
     }
 
-    query += " ORDER BY created_at DESC LIMIT ? OFFSET ?";
+    query += " GROUP BY j.id ORDER BY j.created_at DESC LIMIT ? OFFSET ?";
     queryParams.push(limit, offset);
 
     const [jobs] = await db.query(query, queryParams);
 
+    // Convert applicants_count from string to number
+    const jobsWithCount = jobs.map(job => ({
+      ...job,
+      applicants_count: parseInt(job.applicants_count) || 0
+    }));
+
     return NextResponse.json({
       success: true,
-      data: jobs,
-      total: jobs.length,
+      data: jobsWithCount,
+      total: jobsWithCount.length,
     });
   } catch (error) {
     console.error("Error fetching jobs:", error);
