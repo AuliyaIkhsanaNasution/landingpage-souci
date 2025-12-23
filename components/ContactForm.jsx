@@ -193,6 +193,22 @@ export default function ContactForm() {
                 />
               </div>
 
+              {/* Subject Field */}
+                <div>
+                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                    Subjek : <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                  id="contact-subject"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none text-gray-900 placeholder-gray-400 bg-white"
+                  placeholder="Tulis Subject (Opsional)"
+                />
+                </div>
+
               {/* Message Field */}
               <div>
                 <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 mb-2">
