@@ -1,61 +1,34 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/database";
 
-/**
- * PATCH /api/applications/[id]
- * Update application status
- */
 export async function PATCH(req, { params }) {
   try {
     const { id } = await params;
     const body = await req.json();
     const { status } = body;
 
-    // Validate status
-    if (!["pending", "reviewing", "accepted", "rejected"].includes(status)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Invalid status. Must be: pending, reviewing, accepted, or rejected",
-        },
-        { status: 400 }
-      );
-    }
-
-    // Check if application exists
-    const [existing] = await db.query(
-      "SELECT id FROM applications WHERE id = ?",
-      [id]
+    // Gunakan nama tabel: job_applications
+    // Hapus updated_at karena tidak ada di struktur tabel Anda
+    const [result] = await db.query(
+      "UPDATE job_applications SET status = ? WHERE id = ?",
+      [status, id]
     );
 
-    if (existing.length === 0) {
+    if (result.affectedRows === 0) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Application not found",
-        },
+        { success: false, message: "Data tidak ditemukan" },
         { status: 404 }
       );
     }
 
-    // Update status
-    await db.query(
-      "UPDATE applications SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-      [status, id]
-    );
-
     return NextResponse.json({
       success: true,
-      message: `Application status updated to ${status}`,
+      message: "Status berhasil diperbarui",
     });
   } catch (error) {
-    console.error("Error updating application status:", error);
+    console.error("DETAILED_BACKEND_ERROR:", error);
     return NextResponse.json(
-      {
-        success: false,
-        message: "Error updating application status",
-      },
+      { success: false, message: error.message },
       { status: 500 }
     );
   }
