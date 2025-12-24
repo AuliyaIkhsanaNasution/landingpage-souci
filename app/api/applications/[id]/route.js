@@ -42,9 +42,9 @@ export async function DELETE(req, { params }) {
   try {
     const { id } = await params;
 
-    // Check if application exists
+    // Check if application exists - UBAH KE job_applications
     const [existing] = await db.query(
-      "SELECT id, cv_path FROM applications WHERE id = ?",
+      "SELECT id, cv_path, ktp_path, kartu_keluarga_path, ijazah_path, skck_path, sertifikat_paths FROM job_applications WHERE id = ?",
       [id]
     );
 
@@ -58,10 +58,11 @@ export async function DELETE(req, { params }) {
       );
     }
 
+    const fs = require("fs").promises;
+    const path = require("path");
+
     // Delete CV file if exists
     if (existing[0].cv_path) {
-      const fs = require("fs").promises;
-      const path = require("path");
       const filePath = path.join(process.cwd(), "public", existing[0].cv_path);
 
       try {
@@ -72,8 +73,68 @@ export async function DELETE(req, { params }) {
       }
     }
 
-    // Delete application from database
-    await db.query("DELETE FROM applications WHERE id = ?", [id]);
+    // Delete KTP file if exists
+    if (existing[0].ktp_path) {
+      const filePath = path.join(process.cwd(), "public", existing[0].ktp_path);
+      try {
+        await fs.unlink(filePath);
+      } catch (err) {
+        console.error("Error deleting KTP file:", err);
+      }
+    }
+
+    // Delete Kartu Keluarga file if exists
+    if (existing[0].kartu_keluarga_path) {
+      const filePath = path.join(process.cwd(), "public", existing[0].kartu_keluarga_path);
+      try {
+        await fs.unlink(filePath);
+      } catch (err) {
+        console.error("Error deleting Kartu Keluarga file:", err);
+      }
+    }
+
+    // Delete Ijazah file if exists
+    if (existing[0].ijazah_path) {
+      const filePath = path.join(process.cwd(), "public", existing[0].ijazah_path);
+      try {
+        await fs.unlink(filePath);
+      } catch (err) {
+        console.error("Error deleting Ijazah file:", err);
+      }
+    }
+
+    // Delete SKCK file if exists
+    if (existing[0].skck_path) {
+      const filePath = path.join(process.cwd(), "public", existing[0].skck_path);
+      try {
+        await fs.unlink(filePath);
+      } catch (err) {
+        console.error("Error deleting SKCK file:", err);
+      }
+    }
+
+    // Delete Sertifikat files if exists (multiple files)
+    if (existing[0].sertifikat_paths) {
+      try {
+        const sertifikatPaths = typeof existing[0].sertifikat_paths === 'string' 
+          ? JSON.parse(existing[0].sertifikat_paths) 
+          : existing[0].sertifikat_paths;
+        
+        for (const certPath of sertifikatPaths) {
+          const filePath = path.join(process.cwd(), "public", certPath);
+          try {
+            await fs.unlink(filePath);
+          } catch (err) {
+            console.error(`Error deleting Sertifikat file ${certPath}:`, err);
+          }
+        }
+      } catch (err) {
+        console.error("Error parsing/deleting sertifikat files:", err);
+      }
+    }
+
+    // Delete application from database - UBAH KE job_applications
+    await db.query("DELETE FROM job_applications WHERE id = ?", [id]);
 
     return NextResponse.json({
       success: true,
