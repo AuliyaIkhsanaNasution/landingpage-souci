@@ -1,7 +1,0 @@
-# Ignore uploaded CV files
-*.pdf
-*.doc
-*.docx
-
-# Keep the directory
-!.gitkeep
