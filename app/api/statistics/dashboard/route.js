@@ -42,6 +42,21 @@ export async function GET(req) {
        LIMIT 5`
     );
 
+    const [jobsWithApplicants] = await db.query(
+      `SELECT 
+        j.id,
+        j.title,
+        j.location,
+        j.status,
+        COUNT(ja.id) as applicants_count
+       FROM jobs j
+       LEFT JOIN job_applications ja ON j.id = ja.job_id
+       WHERE j.status = "open"
+       GROUP BY j.id, j.title, j.location, j.status
+       ORDER BY j.created_at DESC
+       LIMIT 5`
+    );
+
     const [recentContacts] = await db.query(
       "SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT 5"
     );
@@ -63,6 +78,7 @@ export async function GET(req) {
           applications: recentApplications,
           contacts: recentContacts,
         },
+         activeJobs: jobsWithApplicants,
       },
     });
   } catch (error) {
