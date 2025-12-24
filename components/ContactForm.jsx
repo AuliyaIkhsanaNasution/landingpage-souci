@@ -9,6 +9,7 @@ export default function ContactForm() {
     name: "",
     email: "",
     phone: "",
+    subject: "",
     message: "",
   });
 
@@ -57,7 +58,7 @@ export default function ContactForm() {
 
       if (response.data.success) {
         setSubmitStatus("success");
-        setFormData({ name: "", email: "", phone: "", message: "" });
+        setFormData({ name: "", email: "", phone: "", subject: "",message: "" });
       }
     } catch (error) {
       console.error("Error submitting form:", error);
