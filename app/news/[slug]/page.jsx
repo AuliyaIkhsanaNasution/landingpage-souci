@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,19 +19,38 @@ export default function NewsDetailPage() {
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Gunakan useRef untuk track apakah sudah fetch
+  const hasFetched = useRef(false);
+  const hasIncrementedView = useRef(false);
 
   // Fetch article from backend
   useEffect(() => {
     const fetchArticle = async () => {
+      // Jika sudah pernah fetch, skip
+      if (hasFetched.current) return;
+      hasFetched.current = true;
+
       try {
         const response = await api.get(`/news/${slug}`);
         if (response.data.success) {
           setArticle(response.data.data);
+          
+          // Increment view hanya sekali
+          if (!hasIncrementedView.current) {
+            hasIncrementedView.current = true;
+            
+            // Gunakan setTimeout untuk memastikan hanya dipanggil sekali
+            setTimeout(() => {
+              api.post(`/news/${slug}/view`).catch(err => 
+                console.error("Error incrementing view:", err)
+              );
+            }, 100);
+          }
         }
       } catch (error) {
         console.error("Error fetching article:", error);
         setError("Article not found");
-        // Fallback to default article
         setArticle(getDefaultArticle(slug));
       } finally {
         setLoading(false);
@@ -155,22 +174,6 @@ export default function NewsDetailPage() {
               <div className="article-content" dangerouslySetInnerHTML={{ __html: article.content }} />
             </article>
           </ScrollReveal>
-
-          {/* Tags */}
-          {/* <ScrollReveal direction="up" delay={0.2}>
-            <div className="mt-12 pt-8 border-t border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Tags:</h3>
-              <div className="flex flex-wrap gap-2">
-                {article.tags &&
-                  Array.isArray(article.tags) &&
-                  article.tags.map((tag) => (
-                    <span key={tag} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-blue-100 transition-colors">
-                      #{tag}
-                    </span>
-                  ))}
-              </div>
-            </div>
-          </ScrollReveal> */}
 
           {/* Share Buttons */}
           <ScrollReveal direction="up" delay={0.3}>

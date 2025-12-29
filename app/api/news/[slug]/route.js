@@ -30,14 +30,14 @@ export async function GET(req, { params }) {
       );
     }
 
-    // Increment view count
-    if (isId) {
-      await db.query("UPDATE news SET views = views + 1 WHERE id = ?", [slug]);
-    } else {
-      await db.query("UPDATE news SET views = views + 1 WHERE slug = ?", [
-        slug,
-      ]);
-    }
+    // // Increment view count
+    // if (isId) {
+    //   await db.query("UPDATE news SET views = views + 1 WHERE id = ?", [slug]);
+    // } else {
+    //   await db.query("UPDATE news SET views = views + 1 WHERE slug = ?", [
+    //     slug,
+    //   ]);
+    // }
 
     return NextResponse.json({
       success: true,
