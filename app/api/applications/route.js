@@ -121,12 +121,6 @@ export async function POST(req) {
       "application/pdf"
     ];
 
-    const imageOnly = [
-      "image/png", 
-      "image/jpeg", 
-      "image/jpg"
-    ];
-
     const pdfOnly = ["application/pdf"];
 
     // Save all required documents
@@ -136,11 +130,11 @@ export async function POST(req) {
       // Save CV (PDF or DOC)
       cvPath = await saveFile(cvFile, "cv", documentTypes);
 
-      // Save Surat Lamaran (PDF only)
-      suratLamaranPath = await saveFile(suratLamaranFile, "surat_lamaran", pdfOnly);
+      // Save Surat Lamaran (PDF or DOC only)
+      suratLamaranPath = await saveFile(suratLamaranFile, "surat_lamaran", documentTypes);
 
       // Save Pas Foto (JPG/PNG only)
-      pasFotoPath = await saveFile(pasFotoFile, "pas_foto", imageOnly);
+      pasFotoPath = await saveFile(pasFotoFile, "pas_foto", imageAndPdfTypes);
 
       // Save KTP (PNG, JPG, PDF)
       ktpPath = await saveFile(ktpFile, "ktp", imageAndPdfTypes);

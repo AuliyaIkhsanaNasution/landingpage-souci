@@ -460,7 +460,7 @@ export default function ApplyJobPage() {
                   {/* Surat Lamaran */}
                     <div>
                       <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center justify-between">
-                        <span>Upload Surat Lamaran (PDF) *</span>
+                        <span>Upload Surat Lamaran (PDF/DOC) *</span>
                         {isFileUploaded('suratLamaran') && (
                           <span className="text-xs text-green-600 font-semibold">✓ Uploaded</span>
                         )}
@@ -527,7 +527,7 @@ export default function ApplyJobPage() {
                       type="file"
                       name="cv"
                       onChange={handleChange}
-                      accept=".pdf,.doc,.docx"
+                      accept=".pdf"
                       required
                       className={`w-full px-4 py-3 border rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all cursor-pointer ${
                         fieldErrors.cv ? 'border-red-500 bg-red-50' : 'border-gray-300'
