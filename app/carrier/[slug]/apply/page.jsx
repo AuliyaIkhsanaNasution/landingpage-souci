@@ -460,7 +460,7 @@ export default function ApplyJobPage() {
                   {/* Surat Lamaran */}
                     <div>
                       <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center justify-between">
-                        <span>Upload Surat Lamaran (PDF/DOC) *</span>
+                        <span>Upload Surat Lamaran (PDF ONLY) *</span>
                         {isFileUploaded('suratLamaran') && (
                           <span className="text-xs text-green-600 font-semibold">✓ Uploaded</span>
                         )}
@@ -518,7 +518,7 @@ export default function ApplyJobPage() {
                   {/* CV */}
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center justify-between">
-                      <span>Upload CV (PDF/DOC) *</span>
+                      <span>Upload CV (PDF ONLY) *</span>
                       {isFileUploaded('cv') && (
                         <span className="text-xs text-green-600 font-semibold">✓ Uploaded</span>
                       )}
@@ -540,7 +540,7 @@ export default function ApplyJobPage() {
                       <p className="text-xs text-red-600 mt-1">⚠ {fieldErrors.cv}</p>
                     )}
                     {!fieldErrors.cv && (
-                      <p className="text-xs text-gray-400 mt-1">Max: 5MB. Format PDF atau DOC/DOCX.</p>
+                      <p className="text-xs text-gray-400 mt-1">Format: PDF. Max: 5MB.</p>
                     )}
                   </div>
 
