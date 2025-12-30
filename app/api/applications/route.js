@@ -62,6 +62,8 @@ export async function POST(req) {
 
     // Get files
     const cvFile = formData.get("cv");
+    const suratLamaranFile = formData.get("surat_lamaran");
+    const pasFotoFile = formData.get("pas_foto");
     const ktpFile = formData.get("ktp");
     const kartuKeluargaFile = formData.get("kartu_keluarga");
     const ijazahFile = formData.get("ijazah");
@@ -79,11 +81,11 @@ export async function POST(req) {
     }
 
     // Validate required files
-    if (!cvFile || !ktpFile || !kartuKeluargaFile || !ijazahFile || !skckFile) {
+    if (!cvFile || !suratLamaranFile || !pasFotoFile || !ktpFile || !kartuKeluargaFile || !ijazahFile || !skckFile) {
       return NextResponse.json(
         {
           success: false,
-          message: "Please upload all required documents: CV, KTP, Kartu Keluarga, Ijazah, and SKCK",
+          message: "Please upload all required documents: CV, Surat Lamaran, Pas Foto, KTP, Kartu Keluarga, Ijazah, and SKCK",
         },
         { status: 400 }
       );
@@ -119,14 +121,26 @@ export async function POST(req) {
       "application/pdf"
     ];
 
+    const imageOnly = [
+      "image/png", 
+      "image/jpeg", 
+      "image/jpg"
+    ];
+
     const pdfOnly = ["application/pdf"];
 
     // Save all required documents
-    let cvPath, ktpPath, kartuKeluargaPath, ijazahPath, skckPath;
+    let cvPath, suratLamaranPath, pasFotoPath, ktpPath, kartuKeluargaPath, ijazahPath, skckPath;
 
     try {
       // Save CV (PDF or DOC)
       cvPath = await saveFile(cvFile, "cv", documentTypes);
+
+      // Save Surat Lamaran (PDF only)
+      suratLamaranPath = await saveFile(suratLamaranFile, "surat_lamaran", pdfOnly);
+
+      // Save Pas Foto (JPG/PNG only)
+      pasFotoPath = await saveFile(pasFotoFile, "pas_foto", imageOnly);
 
       // Save KTP (PNG, JPG, PDF)
       ktpPath = await saveFile(ktpFile, "ktp", imageAndPdfTypes);
@@ -153,8 +167,8 @@ export async function POST(req) {
     // Handle multiple sertifikat files (optional, PDF only)
     let sertifikatPaths = [];
     
-    // Get all files with key "sertifikat[]"
-    const sertifikatFiles = formData.getAll("sertifikat[]");
+    // Get all files with key "sertifikat"
+    const sertifikatFiles = formData.getAll("sertifikat");
     
     if (sertifikatFiles && sertifikatFiles.length > 0) {
       for (const sertifikatFile of sertifikatFiles) {
@@ -181,8 +195,8 @@ export async function POST(req) {
     // Save application to database
     const [result] = await db.query(
       `INSERT INTO job_applications 
-      (job_id, name, email, phone, whatsapp, cv_path, ktp_path, kartu_keluarga_path, ijazah_path, skck_path, sertifikat_paths, cover_letter) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      (job_id, name, email, phone, whatsapp, cv_path, surat_lamaran_path, pas_foto_path, ktp_path, kartu_keluarga_path, ijazah_path, skck_path, sertifikat_paths, cover_letter) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         job_id,
         name,
@@ -190,6 +204,8 @@ export async function POST(req) {
         phone,
         whatsapp,
         cvPath,
+        suratLamaranPath,
+        pasFotoPath,
         ktpPath,
         kartuKeluargaPath,
         ijazahPath,

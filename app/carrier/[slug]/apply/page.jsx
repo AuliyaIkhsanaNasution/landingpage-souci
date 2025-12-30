@@ -18,6 +18,8 @@ export default function ApplyJobPage() {
     phone: "",
     whatsapp: "",
     cv: null,
+    suratLamaran: null,
+    pasFoto: null,
     ktp: null,
     kartuKeluarga: null,
     ijazah: null,
@@ -78,6 +80,8 @@ export default function ApplyJobPage() {
     const requiredFiles = [
       { file: formData.cv, name: "cv", label: "CV" },
       { file: formData.ktp, name: "ktp", label: "KTP" },
+      { file: formData.suratLamaran, name: "suratLamaran", label: "Surat Lamaran" },
+      { file: formData.pasFoto, name: "pasFoto", label: "Pas Foto" }, 
       { file: formData.kartuKeluarga, name: "kartuKeluarga", label: "Kartu Keluarga" },
       { file: formData.ijazah, name: "ijazah", label: "Ijazah" },
       { file: formData.skck, name: "skck", label: "SKCK" },
@@ -95,6 +99,14 @@ export default function ApplyJobPage() {
     if (formData.sertifikat && formData.sertifikat.size > maxSize) {
       errors.sertifikat = `Sertifikat melebihi batas maksimal 5MB`;
     }
+
+    // Validasi khusus untuk Pas Foto (hanya gambar)
+  if (formData.pasFoto) {
+    const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!allowedImageTypes.includes(formData.pasFoto.type)) {
+      errors.pasFoto = 'Pas Foto harus berformat JPG, JPEG, atau PNG';
+    }
+  }
 
     // Validasi field text
     if (!formData.name.trim()) errors.name = "Nama lengkap wajib diisi";
@@ -119,7 +131,7 @@ export default function ApplyJobPage() {
 
   // Hitung jumlah file wajib yang sudah diupload
   const getUploadProgress = () => {
-    const requiredFiles = ['cv', 'ktp', 'kartuKeluarga', 'ijazah', 'skck'];
+    const requiredFiles = ['cv', 'suratLamaran', 'pasFoto', 'ktp', 'kartuKeluarga', 'ijazah', 'skck'];
     const uploaded = requiredFiles.filter(file => isFileUploaded(file)).length;
     return { uploaded, total: requiredFiles.length };
   };
@@ -158,6 +170,8 @@ export default function ApplyJobPage() {
 
       // Upload file wajib
       if (formData.cv) submitData.append("cv", formData.cv);
+      if (formData.suratLamaran) submitData.append("surat_lamaran", formData.suratLamaran);  
+      if (formData.pasFoto) submitData.append("pas_foto", formData.pasFoto);                  
       if (formData.ktp) submitData.append("ktp", formData.ktp);
       if (formData.kartuKeluarga) submitData.append("kartu_keluarga", formData.kartuKeluarga);
       if (formData.ijazah) submitData.append("ijazah", formData.ijazah);
@@ -177,7 +191,9 @@ export default function ApplyJobPage() {
           email: "", 
           phone: "", 
           whatsapp: "",
-          cv: null, 
+          cv: null,
+          suratLamaran: null,
+          pasFoto: null, 
           ktp: null,
           kartuKeluarga: null,
           ijazah: null,
@@ -441,6 +457,64 @@ export default function ApplyJobPage() {
                     )}
                   </div>
 
+                  {/* Surat Lamaran */}
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center justify-between">
+                        <span>Upload Surat Lamaran (PDF) *</span>
+                        {isFileUploaded('suratLamaran') && (
+                          <span className="text-xs text-green-600 font-semibold">✓ Uploaded</span>
+                        )}
+                      </label>
+                      <input
+                        type="file"
+                        name="suratLamaran"
+                        onChange={handleChange}
+                        accept=".pdf"
+                        required
+                        className={`w-full px-4 py-3 border rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all cursor-pointer ${
+                          fieldErrors.suratLamaran ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                        }`}
+                      />
+                      {formData.suratLamaran && !fieldErrors.suratLamaran && (
+                        <p className="text-xs text-green-600 mt-1">✓ {formData.suratLamaran.name}</p>
+                      )}
+                      {fieldErrors.suratLamaran && (
+                        <p className="text-xs text-red-600 mt-1">⚠ {fieldErrors.suratLamaran}</p>
+                      )}
+                      {!fieldErrors.suratLamaran && (
+                        <p className="text-xs text-gray-400 mt-1">Format: PDF. Max: 5MB.</p>
+                      )}
+                    </div>
+
+                    {/* Pas Foto */}
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center justify-between">
+                        <span>Upload Pas Foto (JPG/PNG) *</span>
+                        {isFileUploaded('pasFoto') && (
+                          <span className="text-xs text-green-600 font-semibold">✓ Uploaded</span>
+                        )}
+                      </label>
+                      <input
+                        type="file"
+                        name="pasFoto"
+                        onChange={handleChange}
+                        accept=".jpg,.jpeg,.png"
+                        required
+                        className={`w-full px-4 py-3 border rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all cursor-pointer ${
+                          fieldErrors.pasFoto ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                        }`}
+                      />
+                      {formData.pasFoto && !fieldErrors.pasFoto && (
+                        <p className="text-xs text-green-600 mt-1">✓ {formData.pasFoto.name}</p>
+                      )}
+                      {fieldErrors.pasFoto && (
+                        <p className="text-xs text-red-600 mt-1">⚠ {fieldErrors.pasFoto}</p>
+                      )}
+                      {!fieldErrors.pasFoto && (
+                        <p className="text-xs text-gray-400 mt-1">Format: JPG, JPEG, atau PNG. Max: 5MB. Ukuran ideal: 3x4 atau 4x6.</p>
+                      )}
+                    </div>
+
                   {/* CV */}
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center justify-between">
@@ -502,7 +576,7 @@ export default function ApplyJobPage() {
 
               {/* Cover Letter */}
               <div>
-                <h2 className="text-xl font-bold text-gray-800 mb-4">Cover Letter</h2>
+                <h2 className="text-xl font-bold text-gray-800 mb-4">Deskripsi Singkat (Tentang Diri) </h2>
                 <textarea
                   name="coverLetter"
                   value={formData.coverLetter}

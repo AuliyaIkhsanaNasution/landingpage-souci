@@ -44,8 +44,8 @@ export async function DELETE(req, { params }) {
 
     // Check if application exists - UBAH KE job_applications
     const [existing] = await db.query(
-      "SELECT id, cv_path, ktp_path, kartu_keluarga_path, ijazah_path, skck_path, sertifikat_paths FROM job_applications WHERE id = ?",
-      [id]
+  "SELECT id, cv_path, surat_lamaran_path, pas_foto_path, ktp_path, kartu_keluarga_path, ijazah_path, skck_path, sertifikat_paths FROM job_applications WHERE id = ?",
+  [id]
     );
 
     if (existing.length === 0) {
@@ -70,6 +70,26 @@ export async function DELETE(req, { params }) {
       } catch (err) {
         console.error("Error deleting CV file:", err);
         // Continue even if file deletion fails
+      }
+    }
+
+    // Delete Surat Lamaran file if exists
+    if (existing[0].surat_lamaran_path) {
+      const filePath = path.join(process.cwd(), "public", existing[0].surat_lamaran_path);
+      try {
+        await fs.unlink(filePath);
+      } catch (err) {
+        console.error("Error deleting Surat Lamaran file:", err);
+      }
+    }
+
+    // Delete Pas Foto file if exists
+    if (existing[0].pas_foto_path) {
+      const filePath = path.join(process.cwd(), "public", existing[0].pas_foto_path);
+      try {
+        await fs.unlink(filePath);
+      } catch (err) {
+        console.error("Error deleting Pas Foto file:", err);
       }
     }
 
