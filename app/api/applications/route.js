@@ -15,7 +15,7 @@ async function saveFile(file, folder, allowedTypes, maxSize = 5 * 1024 * 1024) {
 
   // Validate file type
   if (!allowedTypes.includes(file.type)) {
-    throw new Error(`Invalid file type for ${folder}. Allowed: ${allowedTypes.join(", ")}`);
+    throw new Error(`Salah Tipe File ${folder}. Hanya Bisa Upload ${allowedTypes.join(", ")}`);
   }
 
   // Validate file size
@@ -110,8 +110,6 @@ export async function POST(req) {
     // Define allowed file types
     const documentTypes = [
       "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
     
     const imageAndPdfTypes = [
