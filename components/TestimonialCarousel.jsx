@@ -331,8 +331,8 @@ export default function TestimonialCarousel() {
                     <div className="shrink-0">
                       <div className="relative w-24 h-24 md:w-32 md:h-32">
                         <Image
-                          src={testimonials[currentIndex].image}
-                          alt={testimonials[currentIndex].name}
+                          src={testimonials[currentIndex]?.image || "/kosongan.jpg"}
+                          alt={testimonials[currentIndex]?.name || "Client"}
                           fill
                           className="object-cover rounded-full border-4 border-blue-200"
                         />
